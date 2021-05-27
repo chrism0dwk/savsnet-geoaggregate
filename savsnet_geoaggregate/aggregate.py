@@ -59,7 +59,6 @@ def aggregate(
         aggregations.append((m, lambda x: sum(x == m)))
 
     # Aggregate
-    print(geo_ll.columns)
     agg = geo_ll.groupby(["label", "date"]).agg({"mpc": aggregations})
     agg.columns = agg.columns.droplevel(level=0)
 
