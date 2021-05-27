@@ -54,9 +54,15 @@ def aggregate(
     geo_ll = gp.sjoin(geo_ll, geographies, how="left", op="within",)
 
     # Create a list of required aggregations
+    def count(m):
+        def fn(x):
+            return sum(x == m)
+
+        return fn
+
     aggregations = [("total_count", "size")]
     for m in mpc_list:
-        aggregations.append((m, lambda x: sum(x == m)))
+        aggregations.append((m, count(m)))
 
     # Aggregate
     agg = geo_ll.groupby(["label", "date"]).agg({"mpc": aggregations})
