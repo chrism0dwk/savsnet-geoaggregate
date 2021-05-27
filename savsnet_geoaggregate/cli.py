@@ -57,5 +57,5 @@ def run():
     else:
         mpc = []
 
-    df = aggregate(linelist, geo, args.mpc)
+    df = aggregate(linelist, geo, mpc)
     df.to_csv(args.output)
