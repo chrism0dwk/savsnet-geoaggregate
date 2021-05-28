@@ -27,7 +27,7 @@ The recommended way to install ``savsnet-geoaggregation`` is via ``pip``
 
 .. code-block:: bash
 		
-  pip install https://github.com/chrism0dwk/savsnet-geoaggregation
+  pip install git+https://github.com/chrism0dwk/savsnet-geoaggregate.git
 
 For users wishing to fork and develop the package, we use the
 `poetry`_ build system.  It is recommended to have this installed
@@ -60,22 +60,28 @@ Detailed usage can be found by running
 Programmatic usage
 ==================
 
-To use ``savsnet-geoaggregation`` from within a Python script, proceed
-like so:
+To use ``savsnet-geoaggregation`` from within a Python script, you will need a `Pandas <https://pandas.pydata.org>` ``DataFrame`` containing linelisting data, indexed by date and with columns ``mpc``, ``longitude`` and ``latitude``.
+
+The package provides UK Local Authority District polygons as a built-in dataset accessible via the
+``geographies()`` function.  You can provide your own geographies as a `GeoPandas <https://geopandas.org>`` ``GeoDataFrame`` object, using an identical schema to that returned by ``geographies()``.
+
+A worked example might be:
 
 .. code-block:: python
 
    import pandas as pd
    from savsnet_geoaggregation import aggregate
    from savsnet_geoaggregation import geographies
-   from savsnet_geoaggregation.linelist import load_linelist
-				  
-   geo = geographies()
-   linelist = load_linelist("/path/to/linelisting.csv")
 
+   # Load geographies
+   geo = geographies()
+
+   # Load linelisting
+   linelist = pd.read_csv("/path/to/linelisting.csv")
+
+   # Define major presenting conditions as required
    mpcs = ['gastroenteric', 'respiratory', 'pruritus']
 
+   # Perform the aggregation
    df = aggregate(linelist, geo, mpcs)
 
-
-   

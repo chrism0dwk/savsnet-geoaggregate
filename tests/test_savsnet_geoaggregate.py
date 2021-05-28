@@ -55,7 +55,7 @@ def example_geodf():
     ]
     geoseries = gp.GeoSeries.from_wkt(geography, name="geometry")
     geodf = gp.GeoDataFrame(
-        {"label": ["IrishSea"]}, geometry=geoseries, crs="EPSG:4326"
+        {"location": ["IrishSea"]}, geometry=geoseries, crs="EPSG:4326"
     )
     return geodf
 
@@ -63,11 +63,11 @@ def example_geodf():
 @pytest.fixture
 def example_aggregate():
     midx = pd.MultiIndex.from_product(
-        [["IrishSea"], pd.date_range("1970-01-01", "1970-01-04")]
+        [["IrishSea"], [pd.to_datetime("1970-01-01")]]
     )
-    total_count = [1, 1, 1, 2]
-    mastics = [0, 0, 0, 2]
-    flopbot = [0, 0, 0, 2]
+    total_count = [5]
+    mastics = [1]
+    flopbot = [2]
     return pd.DataFrame(
         {"total_count": total_count, "mastics": mastics, "flopbot": flopbot,},
         index=midx,
@@ -96,4 +96,5 @@ def test_aggregate(example_df, example_geodf, example_aggregate):
     from savsnet_geoaggregate import aggregate
 
     df = aggregate(example_df, example_geodf, mpc_list=["mastics", "flopbot"])
+    print(df)
     assert df.equals(example_aggregate)

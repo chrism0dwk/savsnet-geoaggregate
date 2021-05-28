@@ -16,5 +16,5 @@ def geographies():
     )[0]
     gdf = gp.read_file(geofile)
     gdf = gdf[["LAD20CD", "geometry"]]
-    gdf = gdf.rename(columns={"LAD20CD": "label"})
+    gdf = gdf.rename(columns={"LAD20CD": "location"})
     return gdf
