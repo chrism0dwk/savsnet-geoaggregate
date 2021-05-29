@@ -44,7 +44,7 @@ used like so
 
 .. code-block:: bash
 
-		$ savsnet-aggregate --mpc gastroenteric --mpc respiratory --mpc pruritis \
+		$ savsnet-aggregate --mpc gastroenteric,respiratory,pruritis \
 		    --output foo.txt linelisting.csv
 
 which will read in ``linelisting.csv``, write to ``foo.csv``, and summarise the gastroenteric,
