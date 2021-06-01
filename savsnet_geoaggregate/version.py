@@ -1,6 +1,5 @@
 """Returns tuple of semantic version"""
 
-import re
 import pkg_resources
 
 
@@ -18,9 +17,7 @@ def _version():
         ver = pkg_resources.get_distribution(__package__).version
     except pkg_resources.DistributionNotFound:
         ver = _get_version_from_pyproject()
-    regex = re.compile(r"^(\d)\.(\d)\.(.*)")
-    version_crumbs = regex.match(ver).groups()
-    return version_crumbs
+    return ver.split(".", maxsplit=2)
 
 
 MAJOR, MINOR, PATCH = _version()
