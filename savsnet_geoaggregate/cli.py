@@ -59,3 +59,7 @@ def run():
 
     df = aggregate(linelist, geo, mpc)
     df.to_csv(args.output)
+
+
+if __name__ == "__main__":
+    run()
