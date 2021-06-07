@@ -46,16 +46,14 @@ def _spatial_join(points_df, polygon_df, how="inner"):
     return geo_ll
 
 
-def _reindex(df):
+def _reindex(df, locations):
     """df has MultiIndex (date, location).  We re-index to ensure
     dates are contiguous, values padded with 0s where dates are missing
     in the original data frame.
     """
     orig_dates = df.index.get_level_values(0)
     date_range = pd.date_range(orig_dates.min(), orig_dates.max())
-    index = pd.MultiIndex.from_product(
-        (date_range, df.index.get_level_values(1).unique())
-    )
+    index = pd.MultiIndex.from_product((date_range, locations))
     index.names = df.index.names
     return df.reindex(index, fill_value=0)
 
@@ -84,7 +82,7 @@ def _count_by_day_loc(geo_df, mpc_list):
     agg = geo_df.groupby(["date", "location"]).agg({"mpc": aggregations})
     agg.columns = agg.columns.droplevel(level=0)
 
-    return _reindex(agg)
+    return agg
 
 
 def aggregate(
@@ -108,6 +106,7 @@ def aggregate(
     """
     geo_ll = _spatial_join(linelist, geographies)
     agg = _count_by_day_loc(geo_ll, mpc_list)
+    agg = _reindex(agg, geographies["location"].unique())
 
     # Aggregate by 7 days
     period = "W" if begin_on_sunday is True else "7D"
