@@ -12,11 +12,6 @@ from savsnet_geoaggregate.linelist import load_linelist
 def _cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "Linelist CSV",
-        type=str,
-        help="SAVSNet linelist CSV with at least columns ['consult_date', 'mpc', 'owner_latitude', 'owner_longitude'",
-    )
-    parser.add_argument(
         "--output", "-o", type=str, help="Output CSV file", required=True
     )
     parser.add_argument(
@@ -28,6 +23,11 @@ def _cli_args():
         type=str,
         default=None,
         help="Comma-separated list of MPCs to summarise",
+    )
+    parser.add_argument(
+        "Linelist CSV",
+        type=str,
+        help="SAVSNet linelist CSV with at least columns ['consult_date', 'mpc', 'owner_latitude', 'owner_longitude'",
     )
     return parser.parse_args()
 
@@ -59,3 +59,7 @@ def run():
 
     df = aggregate(linelist, geo, mpc)
     df.to_csv(args.output)
+
+
+if __name__ == "__main__":
+    run()
