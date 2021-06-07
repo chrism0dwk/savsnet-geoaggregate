@@ -11,7 +11,7 @@ by week and geography.
 **Copyright**: Chris Jewell 2021
 
 
-`savsnet-geoaggregation` provides tools to ingest SAVSNet linelists of consults, and
+``savsnet-geoaggregate`` provides tools to ingest SAVSNet linelists of consults, and
 aggregate them by week and geography.  The aim is to provide total numbers of consults and
 numbers of consults with major presenting complains per week per geography for
 spatio-temporal analysis.  By default, consults are aggregated to UK Local Authority
@@ -23,7 +23,7 @@ The package can be used in two ways, from the command line and programmatically,
 Installation
 ============
 
-The recommended way to install ``savsnet-geoaggregation`` is via ``pip``
+The recommended way to install ``savsnet-geoaggregate`` is via ``pip``
 
 .. code-block:: bash
 		
@@ -39,7 +39,7 @@ environment.  Regular users of the package may safely disregard this paragraph!
 Command line usage
 ==================
 
-``savsnet-geoaggregation`` provides a command line utility ``savsnet-aggregate``.  This is
+``savsnet-geoaggregate`` provides a command line utility ``savsnet-aggregate``.  This is
 used like so
 
 .. code-block:: bash
@@ -60,7 +60,7 @@ Detailed usage can be found by running
 Programmatic usage
 ==================
 
-To use ``savsnet-geoaggregation`` from within a Python script, you will need a `Pandas <https://pandas.pydata.org>` ``DataFrame`` containing linelisting data, indexed by date and with columns ``mpc``, ``longitude`` and ``latitude``.
+To use ``savsnet-geoaggregate`` from within a Python script, you will need a `Pandas <https://pandas.pydata.org>` ``DataFrame`` containing linelisting data, indexed by date and with columns ``mpc``, ``longitude`` and ``latitude``.
 
 The package provides UK Local Authority District polygons as a built-in dataset accessible via the
 ``geographies()`` function.  You can provide your own geographies as a `GeoPandas <https://geopandas.org>`` ``GeoDataFrame`` object, using an identical schema to that returned by ``geographies()``.
@@ -70,8 +70,8 @@ A worked example might be:
 .. code-block:: python
 
    import pandas as pd
-   from savsnet_geoaggregation import aggregate
-   from savsnet_geoaggregation import geographies
+   from savsnet_geoaggregate import aggregate
+   from savsnet_geoaggregate import geographies
 
    # Load geographies
    geo = geographies()
