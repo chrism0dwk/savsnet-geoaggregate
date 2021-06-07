@@ -26,11 +26,12 @@ def examplecsv(tmpdir_factory):
 
 @pytest.fixture
 def example_df():
+    """ some test points in the middle of a unit square """
     df = pd.DataFrame(
         {
             "mpc": ["mastics", "salanders", "malanders", "flopbot", "flopbot"],
-            "longitude": [-3.806693] * 5,
-            "latitude": [53.785583] * 5,
+            "longitude": [0.5] * 5,
+            "latitude": [0.5] * 5,
         },
         index=pd.Index(
             pd.to_datetime(
@@ -50,12 +51,13 @@ def example_df():
 
 @pytest.fixture
 def example_geodf():
+    """ a unit square as a geodata frame """
     geography = [
-        "POLYGON ((-3.806 53.785, -3.807 53.785, -3.807 53.786, -3.806 53.786, -3.806 53.785))"
+        "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
     ]
     geoseries = gp.GeoSeries.from_wkt(geography, name="geometry")
     geodf = gp.GeoDataFrame(
-        {"location": ["IrishSea"]}, geometry=geoseries, crs="EPSG:4326"
+        {"location": ["UnitSquare"]}, geometry=geoseries, crs="EPSG:4326"
     )
     return geodf
 
@@ -63,7 +65,7 @@ def example_geodf():
 @pytest.fixture
 def example_aggregate():
     midx = pd.MultiIndex.from_product(
-        [["IrishSea"], [pd.to_datetime("1970-01-01")]]
+        [["UnitSquare"], [pd.to_datetime("1970-01-01")]]
     )
     total_count = [5]
     mastics = [1]
