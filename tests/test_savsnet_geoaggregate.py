@@ -25,38 +25,43 @@ def examplecsv(tmpdir_factory):
         f.write(CSVCONTENT)
     return tmpfile
 
+
 @pytest.fixture
 def example_df():
     """ some test points in the middle of a unit square """
     StringData = StringIO(
-"""mpc,longitude,latitude,date
+        """mpc,longitude,latitude,date
 mastics, 0.5, 0.5, 1970-01-01
 salanders, 0.5, 0.5, 1970-01-02
 malanders, 0.5, 0.5, 1970-01-03
 flopbot, 0.5, 0.5, 1970-01-04
 flopbot, 0.5, 0.5, 1970-01-05
-""")
+"""
+    )
     return read_date_index(StringData)
 
 
 def read_date_index(d):
-    df = pd.read_csv(d, sep=",", skipinitialspace=True)
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.set_index('date')
+    df = pd.read_csv(
+        d,
+        sep=",",
+        skipinitialspace=True,
+        parse_dates=["date"],
+        index_col=["date"],
+    )
     return df
 
 
 @pytest.fixture
 def example_geodf():
     """ a unit square as a geodata frame """
-    geography = [
-        "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"
-    ]
+    geography = ["POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))"]
     geoseries = gp.GeoSeries.from_wkt(geography, name="geometry")
     geodf = gp.GeoDataFrame(
         {"location": ["UnitSquare"]}, geometry=geoseries, crs="EPSG:4326"
     )
     return geodf
+
 
 @pytest.fixture
 def example_geodefs():
@@ -67,7 +72,9 @@ def example_geodefs():
     ]
     geoseries = gp.GeoSeries.from_wkt(geography, name="geometry")
     geodf = gp.GeoDataFrame(
-        {"location": ["UnitSquare", "SecondSquare"]}, geometry=geoseries, crs="EPSG:4326"
+        {"location": ["UnitSquare", "SecondSquare"]},
+        geometry=geoseries,
+        crs="EPSG:4326",
     )
     return geodf
 
