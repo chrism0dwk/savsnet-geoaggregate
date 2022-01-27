@@ -25,9 +25,15 @@ def _cli_args():
         help="Comma-separated list of MPCs to summarise",
     )
     parser.add_argument(
+        "--species",
+        "-s",
+        type=str,
+        help="Species of animal MPC summary belongs to",
+    )
+    parser.add_argument(
         "Linelist CSV",
         type=str,
-        help="SAVSNet linelist CSV with at least columns ['consult_date', 'mpc', 'owner_latitude', 'owner_longitude'",
+        help="SAVSNet linelist CSV with at least columns ['consult_date', 'mpc', 'owner_latitude', 'owner_longitude', 'species']",
     )
     return parser.parse_args()
 
