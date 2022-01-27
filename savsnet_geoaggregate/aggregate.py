@@ -9,7 +9,7 @@ import geopandas as gp
 
 from savsnet_geoaggregate import config
 
-CSV_COLS = ["consult_date", "mpc", "owner_latitude", "owner_longitude"]
+CSV_COLS = ["consult_date", "mpc", "owner_latitude", "owner_longitude", "species"]
 
 
 def _load_mpc_csv(filename: str) -> pd.DataFrame:
@@ -59,12 +59,12 @@ def _reindex(df, locations):
 
 
 def _count_by_day_loc(geo_df, mpc_list):
-    """Counts number of linelist records by day/location
+    """Counts number of linelist records by day/location/species
     according to requested mpcs
     
-    :param geo_df: a GeoDataFrame with columns ["date", "location", "mpc"]
+    :param geo_df: a GeoDataFrame with columns ["date", "location", "mpc", "species"]
     :param mpc_list: a list of mpc strings to match
-    :returns: a DataFrame indexed by (`date`, `location`) containing total record 
+    :returns: a DataFrame indexed by (`date`, `location`, `species`) containing total record 
     count and counts matching strings in `mpc_list`.
     """
 
@@ -78,8 +78,8 @@ def _count_by_day_loc(geo_df, mpc_list):
     for m in mpc_list:
         aggregations.append((m, count(m)))
 
-    # Aggregate to location/day
-    agg = geo_df.groupby(["date", "location"]).agg({"mpc": aggregations})
+    # Aggregate to location/day by species
+    agg = geo_df.groupby(["date", "location", "species"]).agg({"mpc": aggregations})
     agg.columns = agg.columns.droplevel(level=0)
 
     return agg
