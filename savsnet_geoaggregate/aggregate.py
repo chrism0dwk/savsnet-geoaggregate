@@ -14,7 +14,7 @@ CSV_COLS = [
     "mpc",
     "owner_latitude",
     "owner_longitude",
-    "species",
+    "species"
 ]
 
 
