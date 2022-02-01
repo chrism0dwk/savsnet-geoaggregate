@@ -13,12 +13,18 @@ from io import StringIO
 def examplecsv(tmpdir_factory):
     """Create an example CSV file"""
 
-    CSVCONTENT = f"""{config.LL_COLUMN_DATE},{config.LL_COLUMN_MPC},{config.LL_COLUMN_LONGITUDE},{config.LL_COLUMN_LATITUDE}
-1970-01-01,mastics,-3.806693,53.785583
-1970-01-02,salanders,-3.806693,53.785583
-1970-01-03,malanders,-3.806693,53.785583
-1970-01-04,flopbot,-3.806693,53.785583
-1970-01-05,flopbot,-3.806693,53.785583
+    CSVCONTENT = f"""{config.LL_COLUMN_DATE},{config.LL_COLUMN_MPC},{config.LL_COLUMN_LONGITUDE},{config.LL_COLUMN_LATITUDE},{config.LL_COLUMN_SPECIES}
+1970-01-01,mastics,-3.806693,53.785583,triceratops
+1970-01-02,salanders,-3.806693,53.785583,triceratops
+1970-01-03,malanders,-3.806693,53.785583,triceratops
+1970-01-04,flopbot,-3.806693,53.785583,triceratops
+1970-01-05,flopbot,-3.806693,53.785583,triceratops
+1970-01-01,mastics,-3.806693,53.785583,icthyosaur
+1970-01-02,salanders,-3.806693,53.785583,icthyosaur
+1970-01-03,malanders,-3.806693,53.785583,icthyosaur
+1970-01-04,flopbot,-3.806693,53.785583,icthyosaur
+1970-01-05,flopbot,-3.806693,53.785583,icthyosaur
+
 """
     tmpfile = tmpdir_factory.mktemp("data").join("data.csv")
     with open(tmpfile, "w") as f:
@@ -30,12 +36,17 @@ def examplecsv(tmpdir_factory):
 def example_df():
     """ some test points in the middle of a unit square """
     StringData = StringIO(
-        """mpc,longitude,latitude,date
-mastics, 0.5, 0.5, 1970-01-01
-salanders, 0.5, 0.5, 1970-01-02
-malanders, 0.5, 0.5, 1970-01-03
-flopbot, 0.5, 0.5, 1970-01-04
-flopbot, 0.5, 0.5, 1970-01-05
+        """mpc,longitude,latitude,date,species
+mastics, 0.5, 0.5, 1970-01-01,triceratops
+salanders, 0.5, 0.5, 1970-01-02,triceratops
+malanders, 0.5, 0.5, 1970-01-03,triceratops
+flopbot, 0.5, 0.5, 1970-01-04,triceratops
+flopbot, 0.5, 0.5, 1970-01-05,triceratops
+mastics, 0.5, 0.5, 1970-01-01,icthyosaur
+salanders, 0.5, 0.5, 1970-01-02,icthyosaur
+malanders, 0.5, 0.5, 1970-01-03,icthyosaur
+flopbot, 0.5, 0.5, 1970-01-04,icthyosaur
+flopbot, 0.5, 0.5, 1970-01-05,icthyosaur
 """
     )
     return read_date_index(StringData)
@@ -81,16 +92,23 @@ def example_geodefs():
 
 @pytest.fixture
 def example_aggregate():
-    midx = pd.MultiIndex.from_product(
-        [["UnitSquare"], [pd.to_datetime("1970-01-01")]]
+    midx = pd.MultiIndex.from_arrays(
+        [
+            ["UnitSquare"] * 2,
+            ["icthyosaur", "triceratops"],
+            [pd.to_datetime("1970-01-01")] * 2,
+        ],
+        names=["location", "species", "date"],
     )
-    total_count = [5]
-    mastics = [1]
-    flopbot = [2]
-    return pd.DataFrame(
+    total_count = [5, 5]
+    mastics = [1, 1]
+    flopbot = [2, 2]
+    df = pd.DataFrame(
         {"total_count": total_count, "mastics": mastics, "flopbot": flopbot,},
         index=midx,
     )
+    print(df)
+    return df
 
 
 def test_load_linelist(examplecsv):
@@ -100,8 +118,10 @@ def test_load_linelist(examplecsv):
 
     test_content = load_linelist(examplecsv)
 
-    assert test_content.shape[0] == 5
-    assert set(test_content.columns) == set(("mpc", "longitude", "latitude"))
+    assert test_content.shape[0] == 10
+    assert set(test_content.columns) == set(
+        ("mpc", "longitude", "latitude", "species")
+    )
     assert test_content.index.name == "date"
 
 
